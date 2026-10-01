@@ -17,7 +17,7 @@ export class ReservationsService {
 async  create(createReservationDto: CreateReservationDto) {
     
   const name = createReservationDto.customerName.trim();
-  const existingReservation = await this.reservationRepository.findOneBy ({ customerName });
+  const existingReservation = await this.reservationRepository.findOneBy ({ customerName: name });
 
 
   if (existingReservation) {
