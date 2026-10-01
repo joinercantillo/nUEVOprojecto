@@ -1,31 +1,39 @@
 import { Injectable } from '@nestjs/common';
+import { randomUUID } from 'node:crypto';
 import { CreateReservationDto } from './dto/create-reservation.dto.js';
-import { UpdateReservationDto } from './dto/update-reservation.dto.js';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-import { Reservation } from './entities/reservation.entity.js';
-
 import { CustonException } from './filters/http-exception.filters.js';
-
 
 @Injectable()
 export class ReservationsService {
-  constructor(
-    @InjectRepository(Reservation)
-    private readonly reservationRepository: Repository<Reservation>,
-  ){}
-async  create(createReservationDto: CreateReservationDto) {
-    
-  const name = createReservationDto.customerName.trim();
-  const existingReservation = await this.reservationRepository.findOneBy ({ customerName: name });
+  private readonly reservations: Array<{
+    id: string;
+    customerName: string;
+    people: number;
+  }> = [];
 
+  findAll() {
+    return this.reservations;
+  }
 
-  if (existingReservation) {
-    throw new CustonException(
-      `reservation with customer name "${name}" already exists`,
+  create(createReservationDto: CreateReservationDto) {
+    const customerName = createReservationDto.customerName.trim();
+    const existingReservation = this.reservations.find(
+      (reservation) => reservation.customerName === customerName,
     );
-  }
 
-  }
+    if (existingReservation) {
+      throw new CustonException(
+        `Reservation with customer name "${customerName}" already exists`,
+      );
+    }
 
+    const reservation = {
+      id: randomUUID(),
+      customerName,
+      people: createReservationDto.people,
+    };
+    this.reservations.push(reservation);
+
+    return reservation;
+  }
 }

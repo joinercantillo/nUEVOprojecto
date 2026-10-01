@@ -1,29 +1,21 @@
 
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsString, MaxLength, MinLength,IsEmail, IsNumber } from 'class-validator';
-
-
+import { Type } from 'class-transformer';
+import { IsEmail, IsInt, IsNotEmpty, IsString, Min } from 'class-validator';
 
 export class CreateReservationDto {
-    @ApiProperty({ example: 'Main Courses', minLength: 4, maxLength: 100 })
+    @ApiProperty({ example: 'Carlos Pérez' })
     @IsString()
     @IsNotEmpty()
-    @MinLength(4, { message: 'Enter at least 4 characters' })
-    @MaxLength(100, { message: 'Enter no more than 100 characters' })
     customerName: string;
 
-
-    @ApiProperty({ example: 'Main Courses', minLength: 4, maxLength: 100 })
+    @ApiProperty({ example: 'carlos@example.com' })
     @IsEmail()
-    @IsNotEmpty()
-    @MinLength(4, { message: 'Enter at least 4 characters' })
-    @MaxLength(100, { message: 'Enter no more than 100 characters' })
     email: string;
 
-    @ApiProperty({ example: 'Main Courses', minLength: 4, maxLength: 100 })
-    @IsNumber()
-    @IsNotEmpty()
-    @MinLength(4, { message: 'Enter at least 4 characters' })
-    @MaxLength(100, { message: 'Enter no more than 100 characters' })
+    @ApiProperty({ example: 4, minimum: 1 })
+    @Type(() => Number)
+    @IsInt()
+    @Min(1)
     people: number;
 }
