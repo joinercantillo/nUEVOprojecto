@@ -4,6 +4,7 @@ import { AppController } from './app.controller.js';
 import { AppService } from './app.service.js';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { EnvConfig, envValidationSchema } from './config/index.js';
+import { ReservationsModule } from './reservations/reservations.module.js';
 
 export const { ObserveModule, ObserveInstrument } = createObserveModule();
 
@@ -24,6 +25,7 @@ export const { ObserveModule, ObserveInstrument } = createObserveModule();
       })
 
     }),
+    ReservationsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
